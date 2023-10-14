@@ -44,35 +44,35 @@ def save_gym_data(data: dict, db: Database, conf: Config) -> InsertOneResult:
     return status
 
 def main():
-
+    print(config)
     client = MongoClient(config.mongo_uri)
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+    db = client.blinker.blinkerers
+    
+    try:    
+        curr_data = get_gym_data(config)
+        if curr_data:
+            print("Saving time data")
+            save_status = save_gym_data(curr_data, db, config)
+            with open('/tmp/test', 'w') as f:
+                f.write(datetime.now().isoformat())
+                f.write("\n")
+                f.write(str(config))
+                f.write("\n")
+                
+                print(curr_data)
+                f.write(str(curr_data))
+                # json.dump(curr_data, f, default=myconverter)
+                # f.write(json.dumps(curr_data))
+            print(save_status.inserted_id)
+    except Exception as e:
+        print("Connect failed")
+        print(e)
 
-    while True:
-        try:    
-            client.admin.command('ping')
-            print("Pinged your deployment. You successfully connected to MongoDB!")
-            db = client.blinker.blinkerers
-            curr_data = get_gym_data(config)
-            if curr_data:
-                print("Saving time data")
-                save_status = save_gym_data(curr_data, db, config)
-                with open('/tmp/test', 'w') as f:
-                    f.write(datetime.now().isoformat())
-                    f.write("\n")
-                    f.write(str(config))
-                    f.write("\n")
-                    
-                    print(curr_data)
-                    f.write(str(curr_data))
-                    # json.dump(curr_data, f, default=myconverter)
-                    # f.write(json.dumps(curr_data))
-                print(save_status.inserted_id)
-        except Exception as e:
-            print("Connect failed")
-            print(e)
-
-        print(f"Sleeping for {config.seconds}")
-        sleep(config.seconds)
+    client.close()    
+    # print(f"Sleeping for {config.seconds}")
+    # sleep(config.seconds)
     return 0
 
 if __name__ == "__main__":
