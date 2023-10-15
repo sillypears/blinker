@@ -44,16 +44,21 @@ def save_gym_data(data: dict, db: Database, conf: Config) -> InsertOneResult:
     return status
 
 def main():
-    print(config)
-    client = MongoClient(config.mongo_uri)
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-    db = client.blinker.blinkerers
-    
+    try:
+        client = MongoClient(config.mongo_uri)
+        client.admin.command('ping')
+        print("Pinged your deployment. You successfully connected to MongoDB!")
+    except Exception as e:
+        print("We failed")
+        print(e)
+        sleep(5)    
+        main()
     try:    
         curr_data = get_gym_data(config)
+        
         if curr_data:
             print("Saving time data")
+            db = client.blinker.blinkerers
             save_status = save_gym_data(curr_data, db, config)
             with open('/tmp/test', 'w') as f:
                 f.write(datetime.now().isoformat())
