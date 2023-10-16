@@ -10,7 +10,7 @@ from pymongo.results import InsertOneResult
 from time import sleep
 
 load_dotenv()
-config = Config(os.environ.get("BLINK_URI"), os.environ.get("BLINK_FACILITYID"), os.environ.get("BLINK_APIKEY"), os.environ.get("BLINK_MONGOURI"), int(os.environ.get("BLINK_REFRESH_SECONDS")))
+config = Config(os.environ.get("BLINK_URI"), os.environ.get("BLINK_FACILITYID"), json.loads(os.environ.get("BLINK_OBJECT")), os.environ.get("BLINK_APIKEY"), os.environ.get("BLINK_MONGOURI"), int(os.environ.get("BLINK_REFRESH_SECONDS")))
 
 def myconverter(o):
  if isinstance(o, datetime.datetime):
@@ -29,6 +29,7 @@ def get_gym_data(conf:Config) -> dict:
         data['totalCapacity'] = data['info']['ClubCapacity']
         data['theTime'] = datetime.utcnow()
         data['theMeta'] = {"source": "api"}
+        data['gym'] = config._facility_object['facName']
         
         data.pop('info')
 

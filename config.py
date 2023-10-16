@@ -1,7 +1,10 @@
 class Config(object):
-    def __init__(self, uri, fac_id, apikey, mongo_uri, seconds):
+    def __init__(self, uri, fac_id, fac_obj, apikey, mongo_uri, seconds):
+        print(fac_obj)
+        print(type(fac_obj))
         self._uri = uri
         self._facility_id = fac_id
+        self._facility_object = fac_obj
         self._apikey = apikey
         self._mongo_uri = mongo_uri
         self._update_sec = seconds
@@ -46,6 +49,14 @@ class Config(object):
     def seconds(self, value):
         self._update_sec = value
 
+    @property 
+    def fac_obj(self):
+        return self._facility_object
+    
+    @fac_obj.setter
+    def fac_obj(self, value):
+        self._facility_object = value
+        
     def __str__(self):
-        return f"{self.uri}, {self._facility_id}, {self.apikey}, {self.mongo_uri}"
+        return f"{self.uri}, {self._facility_id}, {self.fac_obj}, {self.apikey}, {self.mongo_uri}"
     

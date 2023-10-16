@@ -1,6 +1,7 @@
 BLINK_URI = api.sls.blinkfitness.com
+BLINK_PATH = moso-api/activities/whoischeckedin
 BLINK_FACILITYID = FACID_FROM_SITE
 BLINK_APIKEY = APIKEY_FROM_SITE
 BLINK_REFRESH_SECONDS = 300
-
+BLINK_OBJECT = { "facName": "", "facShortName": "", "uri":"", "path":"", "query":{"facilityId": ""}, "apikey":"","facilities": [{ "id": "", "location": ""}] }
 BLINK_MONGOURI = YOUR_MONGO_DB_URL
